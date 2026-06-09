@@ -200,6 +200,13 @@ def get_options_detail_vimdoc() -> "VimdocSection":
     section = VimdocSection("options", "oil-options")
     section.body.append(
         """
+skip_confirmation                                            *oil.skip_confirmation*
+    type: `boolean` default: `false`
+    Before performing filesystem operations, Oil displays a confirmation popup to ensure
+    that all operations are intentional. When this option is `true`, the popup will
+    always be skipped, including for destructive operations such as deletes. Calling
+    `oil.save` with `confirm = true` will still show the popup.
+
 skip_confirm_for_simple_edits                  *oil.skip_confirm_for_simple_edits*
     type: `boolean` default: `false`
     Before performing filesystem operations, Oil displays a confirmation popup to ensure

@@ -47,6 +47,8 @@ CONFIG                                                                *oil-confi
       delete_to_trash = false,
       -- Skip the confirmation popup for simple operations (:help oil.skip_confirm_for_simple_edits)
       skip_confirm_for_simple_edits = false,
+      -- Skip the confirmation popup for all operations (:help oil.skip_confirmation)
+      skip_confirmation = false,
       -- Selecting a new/moved/renamed file or directory will prompt you to save changes first
       -- (:help prompt_save_on_select_new_entry)
       prompt_save_on_select_new_entry = true,
@@ -225,6 +227,13 @@ CONFIG                                                                *oil-confi
 OPTIONS                                                              *oil-options*
 
 
+skip_confirmation                                            *oil.skip_confirmation*
+    type: `boolean` default: `false`
+    Before performing filesystem operations, Oil displays a confirmation popup to ensure
+    that all operations are intentional. When this option is `true`, the popup will
+    always be skipped, including for destructive operations such as deletes. Calling
+    `oil.save` with `confirm = true` will still show the popup.
+
 skip_confirm_for_simple_edits                  *oil.skip_confirm_for_simple_edits*
     type: `boolean` default: `false`
     Before performing filesystem operations, Oil displays a confirmation popup to ensure
@@ -396,7 +405,8 @@ save({opts}, {cb})                                                      *oil.sav
     Parameters:
       {opts} `nil|table`
           {confirm} `nil|boolean` Show confirmation when true, never when false,
-                    respect skip_confirm_for_simple_edits if nil
+                    respect skip_confirmation and skip_confirm_for_simple_edits
+                    if nil
       {cb}   `nil|fun(err: nil|string)` Called when mutations complete.
 
     Note:
