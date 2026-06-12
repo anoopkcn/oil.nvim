@@ -682,10 +682,21 @@ local function render_buffer(bufnr, opts)
     col_align[i + 1] = conf and conf.align or "left"
   end
 
-  if M.should_display("..", bufnr) then
-    local cols =
-      M.format_entry_cols({ 0, "..", "directory" }, column_defs, col_width, adapter, true, bufnr)
-    table.insert(line_table, cols)
+  for _, virtual_name in ipairs({ ".", ".." }) do
+    if M.should_display(virtual_name, bufnr) then
+      local meta
+      if adapter.name == "files" then
+        local _, dir = util.parse_url(bufname)
+        local stat = uv.fs_stat(fs.posix_to_os_path(assert(dir)) .. virtual_name)
+        if stat then
+          meta = { stat = stat }
+        end
+      end
+      ---@type oil.InternalEntry
+      local virtual_entry = { 0, virtual_name, "directory", meta }
+      local cols = M.format_entry_cols(virtual_entry, column_defs, col_width, adapter, true, bufnr)
+      table.insert(line_table, cols)
+    end
   end
 
   for _, entry in ipairs(entry_list) do
