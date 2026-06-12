@@ -678,6 +678,17 @@ M.select = function(opts, callback)
     return finish("Could not find entry under cursor")
   end
 
+  -- Selecting the "." entry refreshes the directory instead of re-opening it
+  if
+    #entries == 1
+    and entries[1].id == 0
+    and entries[1].name == "."
+    and not (opts.split or opts.tab or opts.preview)
+  then
+    require("oil.actions").refresh.callback()
+    return finish()
+  end
+
   -- Check if any of these entries are moved from their original location
   local bufname = vim.api.nvim_buf_get_name(0)
   local any_moved = false
